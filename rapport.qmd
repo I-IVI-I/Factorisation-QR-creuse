@@ -3,6 +3,7 @@ title: "Projet de cours"
 subtitle: "MTH8211"
 author:
   - name: Wadih Chalhoub
+  - name: Nicolas Alacoque
     email: wadih.chalhoub@polymtl.ca
     affiliation:
       - name: Polytechnique Montréal
@@ -22,30 +23,23 @@ format:
 engine: julia
 ---
 
-```{julia}
-#| output: false
-using Pkg
-Pkg.activate("labo3_env")
-using LinearAlgebra
-```
-
-## Contexte et Motivations  
+# Contexte et Motivations  
 Les techniques de visualisation d’espaces occupent une place centrale dans des domaines variés, allant de l’art numérique aux jeux vidéo, en passant par des applications scientifiques comme la discrétisation de volumes pour les simulations numériques. Ces méthodes permettent de transformer des représentations 2D, telles que des images ou des scans, en modèles 3D discrets, essentiels pour des analyses physiques ou médicales, notamment en imagerie médicale ou en simulations CFD.  
 Le passage d’une image 2D à un espace 3D discrétisé repose sur des systèmes matriciels issus du traitement du signal, comme les équations aux dérivées partielles ou les problèmes de moindres carrés. Ces matrices présentent souvent des structures particulières, creuses ou bloc-diagonales, qui reflètent les contraintes physiques du problème.  
   
 La résolution de ces systèmes linéaires de grande taille exige des méthodes numériques à la fois stables et efficaces. La décomposition QR se présente comme une solution privilégiée, surtout lorsque la structure creuse ou bloc peut être exploitée pour réduire la complexité calculatoire.  
 
-# Objectif de l’Étude  
-Cette étude explore l’application et l'implémentation de la décomposition QR structurée pour résoudre des problème aux moindres carrés linéaire. Elle se concentre sur xxxxxx axes principaux :  
+## Objectif de l’Étude  
+Cette étude explore l’application et l'implémentation de la décomposition QR structurée pour résoudre des problème aux moindres carrés linéaire. Elle se concentre sur 3 axes principaux :  
 
-1. Des matrices bloc-diagonales  
+1. Des matrices bloc-diagonales
 2. Cas de concaténation horizontale
 3. Construction de la matrice de problèmes d'ajustement de faisceau en fonction de paramétres
 
 
-## Construction de la matrice
+# Construction de la Matrice
 
-# Problèmes d'Ajustement de Faisceau
+## Problèmes d'Ajustement de Faisceau
 
 Les problèmes d'ajustement de faisceau sont des problèmes d'optimisation non linéaire ou on cherche à minimiser la somme des erreurs de reprojection :
 
@@ -60,23 +54,9 @@ où :
 - **$\pi(P_j, X_i)$** : Projection du point $X_i$ dans l'image de la caméra $j$  
 - **$x_{ij}$** : Observation 2D du point $i$ dans l'image $j$ (coordonnées pixel)
 
-## Formulation Mathématique
-
-La fonction de projection $\pi$ s'écrit typiquement :
-
-$$
-\pi(P_j, X_i) = \text{proj}\left( K_j [R_j | t_j] X_i \right)
-$$
-
-avec :
-- $K_j$ : Matrice de calibration intrinsèque  
-- $[R_j | t_j]$ : Paramètres extrinsèques (rotation + translation)  
-- $\text{proj}([x,y,z]^T) = [x/z, y/z]^T$ : Division perspective
-
 ## Structure du Problème
 
 La matrice jacobienne du système présente une structure creuse caractéristique :
-::: {#eq-jacobian}
 $$
 J = \begin{bmatrix}
 \frac{\partial r_{11}}{\partial P_1} & 0 & \frac{\partial r_{11}}{\partial X_1} & \frac{\partial r_{11}}{\partial X_2} & 0 \\
@@ -86,17 +66,18 @@ J = \begin{bmatrix}
 \end{bmatrix}
 $$
 **Équation 1** : Structure de la matrice jacobienne pour 2 caméras et 3 points 3D
-:::
 Cette structure provient du fait qu'un point 3D $X_i$ n'est visible que par un sous-ensemble de caméras.
 
+# Plan d'Action pour la Factorisation QR Structurée
 
+## Recherche Préliminaire
+L'étude débutera par une analyse des travaux existants, notamment les algorithmes QRKit et SuiteSparseQR, ainsi que des modèles d'ajustement de faisceau. Cette revue bibliographique permettra d'identifier les meilleures pratiques et les optimisations possibles.
 
+## Collecte et Préparation des Données
+Deux types de données seront utilisés : des matrices synthétiques présentant des structures bloc-diagonales et concaténées, ainsi que des problèmes réels issus de la bibliothèque BundleAdjustmentModels.jl. Ces données serviront de base pour les tests et les comparaisons.
 
+## Optimisation des Performances
+L'accent sera mis sur la parallélisation des blocs indépendants et sur une gestion optimale de la mémoire. Ces optimisations visent à améliorer l'efficacité des calculs pour les problèmes de grande taille.
 
-1. Ajouter `BenchmarkTools` à l'environnement de ce laboratoire ;
-
-```{julia}
-#| output: false
-
-```
-
+## Validation et Benchmarks
+Des tests rigoureux compareront les performances de l'implémentation proposée avec celles des solveurs existants, comme SuiteSparseQR. Les mesures porteront sur la précision des résultats et les temps d'exécution.
