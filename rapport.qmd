@@ -30,11 +30,17 @@ Le passage d’une image 2D à un espace 3D discrétisé repose sur des système
 La résolution de ces systèmes linéaires de grande taille exige des méthodes numériques à la fois stables et efficaces. La décomposition QR se présente comme une solution privilégiée, surtout lorsque la structure creuse ou bloc peut être exploitée pour réduire la complexité calculatoire.  
 
 ## Objectif de l’Étude  
-Cette étude explore l’application et l'implémentation de la décomposition QR structurée pour résoudre des problème aux moindres carrés linéaire. Elle se concentre sur 3 axes principaux :  
 
-1. Des matrices bloc-diagonales
-2. Cas de concaténation horizontale
-3. Construction de la matrice de problèmes d'ajustement de faisceau en fonction de paramétres
+Cette étude compte élaborer les meilleurs implémentations 
+Julia des stratégies de factorisation QR creuse pour des 
+problèmes aux moindres carrés structurés en termes d'éfficacité 
+et de capacités, notamment vis-à-vis des structures de matrices 
+de types demandé ('bloc diagonale', 'concaténée horizontale' ainsi que, 
+dans le mesure du possible dans le temps qui est accordé,   
+'bloc-bande', et 'concatenée verticale') ainsi que la 
+factorisation QR dense (LAPACK de Julia et Householder) et creuse 
+(SuiteSparseQR de Julia) pour le traitement des blocs 
+élémentaires.
 
 
 # Construction de la Matrice
@@ -81,3 +87,84 @@ L'accent sera mis sur la parallélisation des blocs indépendants et sur une ges
 
 ## Validation et Benchmarks
 Des tests rigoureux compareront les performances de l'implémentation proposée avec celles des solveurs existants, comme SuiteSparseQR. Les mesures porteront sur la précision des résultats et les temps d'exécution.
+
+# Attentes
+
+Il sera certainement difficile à découvrir une amélioration 
+sur les implémentations fourni gratuitement en licence 
+source ouvert inclus dans les librairies de julia, 
+mais l'éxploration permettra de cibler les opérations clés 
+qui demandent le plus d'allocation de mémoire vive, et 
+d'isoler les stratégies qui sont les plus utiles pour les 
+problèmes d’ajustement de faisceaux. Quant à l'éfficacité, le temps d'execution sera comparé, et les résultats dépenderont principalement de la taille de la matrice, de l'algorithme employé, la précision spécifié, la structure de la matrice et la préconditionnement.
+
+# Références
+::: {#refs}
+:::
+- family-names: "Chalhoub"
+  given-names: "Wadih"
+  orcid: "https://github.com/I-IVI-I/Factorisation-QR-creuse.git"
+- family-names: "Allaire"
+  given-names: "J.J."
+  orcid: "https://orcid.org/0000-0003-0174-9868"
+- family-names: "Teague"
+  given-names: "Charles"
+  orcid: "https://orcid.org/0000-0001-8715-9476"
+- family-names: "Scheidegger"
+  given-names: "Carlos"
+  orcid: "https://orcid.org/0009-0006-9163-6136"
+- family-names: "Xie"
+  given-names: "Yihui"
+  orcid: "https://orcid.org/0000-0003-0645-5666"
+- family-names: "Dervieux"
+  given-names: "Christophe"
+  orcid: "https://orcid.org/0000-0003-4474-2498"
+- family-names: "Woodhull"
+  given-names: "Gordon"
+  orcid: "https://orcid.org/0009-0005-1809-8936"
+title: "Quarto"
+version: 1.7
+doi: 10.5281/zenodo.5960048
+date-released: 2025-04-28
+url: "https://github.com/quarto-dev/quarto-cli"
+
+
+
+@article{10.1145/2049662.2049670,
+  author = {Davis, Timothy A.},
+  title = {Algorithm 915, SuiteSparseQR: Multifrontal multithreaded rank-revealing sparse QR factorization},
+  year = {2011},
+  journal = {ACM Trans. Math. Softw.},
+  volume = {38},
+  number = {1},
+  articleno = {8},
+  doi = {10.1145/2049662.2049670},
+  url = {https://doi.org/10.1145/2049662.2049670},
+  month = dec,
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA}
+}
+
+@techreport{G-2020-42,
+  author = {Angla, Célestine and Bigeon, Jean and Orban, Dominique},
+  title = {Modeling and solving bundle adjustment problems},
+  year = {2020},
+  month = aug,
+  number = {G-2020-42},
+  type = {Les Cahiers du GERAD},
+  institution = {Groupe d'études et de recherche en analyse des décisions},
+  address = {GERAD, Montréal QC H3T 2A7, Canada},
+  url = {https://www.gerad.ca/en/papers/G-2020-42}
+}
+
+@article{DBLP:journals/corr/abs-1802-03773,
+  author = {Jan Svoboda and Thomas J. Cashman and Andrew W. Fitzgibbon},
+  title = {QRkit: Sparse, Composable QR Decompositions for Efficient and Stable Solutions to Problems in Computer Vision},
+  journal = {CoRR},
+  volume = {abs/1802.03773},
+  year = {2018},
+  url = {http://arxiv.org/abs/1802.03773},
+  eprinttype = {arXiv},
+  eprint = {1802.03773}
+}
+
